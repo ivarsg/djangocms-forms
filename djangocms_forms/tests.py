@@ -10,7 +10,4 @@ class ModelTestCase(TestCase):
         )
 
     def test_form_exists(self):
-        try:
-            test_form = Form.objects.get(name="Test Form")
-        except Form.DoesNotExist:
-            pass
+        Form.objects.get(name="Test Form")
