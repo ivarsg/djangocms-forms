@@ -18,7 +18,12 @@ from django.utils import timezone
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
 from django.utils.text import Truncator
-from django.utils.translation import ugettext_lazy as _
+import django
+if django.VERSION[0] < 4:
+    from django.utils.translation import ugettext_lazy as _
+else:
+    from django.utils.translation import gettext_lazy as _
+
 from tablib import Dataset
 
 from .conf import settings

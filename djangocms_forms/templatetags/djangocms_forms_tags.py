@@ -3,7 +3,11 @@ from django.template.defaultfilters import yesno
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
 from six import string_types
-from django.utils.translation import ugettext_lazy as _
+import django
+if django.VERSION[0] < 4:
+    from django.utils.translation import ugettext_lazy as _
+else:
+    from django.utils.translation import gettext_lazy as _
 
 from djangocms_forms.fields import HoneyPotField
 
