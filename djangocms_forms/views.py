@@ -43,7 +43,7 @@ class FormSubmission(FormView):
         form.save(request=self.request)
         form_submission.send(sender=self.__class__, form=form.form_definition, cleaned_data=form.cleaned_data)
 
-        if self.request.is_ajax():
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
             response = {
                 "formIsValid": True,
                 "redirectUrl": form.redirect_url,
@@ -66,7 +66,7 @@ class FormSubmission(FormView):
             return redirect("/")
 
     def form_invalid(self, form, *args, **kwargs):
-        if self.request.is_ajax():
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
             response = {
                 "formIsValid": False,
                 "errors": form.errors,
