@@ -6,7 +6,11 @@ from django.contrib import messages
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.html import strip_tags
-from django.utils.http import is_safe_url
+try:
+    from django.utils.http import is_safe_url as url_has_allowed_host_and_scheme
+except ImportError:
+    from django.utils.http import url_has_allowed_host_and_scheme
+
 import django
 if django.VERSION[0] < 4:
     from django.utils.translation import ugettext_lazy as _
@@ -56,7 +60,7 @@ class FormSubmission(FormView):
                 return redirect(form.redirect_url)
 
             redirect_url = form.cleaned_data["referrer"]
-            if is_safe_url(redirect_url, self.request.get_host()):
+            if url_has_allowed_host_and_scheme(redirect_url, self.request.get_host()):
                 return redirect(redirect_url)
 
             # If for some reason someone was manipulated referrer parameter to
@@ -74,7 +78,7 @@ class FormSubmission(FormView):
             return JsonResponse(response)
         else:
             redirect_url = form.cleaned_data.get("referrer") or self.request.META.get("HTTP_REFERER", "")
-            if is_safe_url(redirect_url, self.request.get_host()):
+            if url_has_allowed_host_and_scheme(redirect_url, self.request.get_host()):
                 messages.error(self.request, _("Invalid form data, one or more fields had errors"))
                 return redirect(redirect_url)
 
