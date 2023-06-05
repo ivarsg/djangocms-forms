@@ -15,7 +15,7 @@ from django.shortcuts import redirect
 from django.template.defaultfilters import slugify, yesno
 from django.template.response import TemplateResponse
 from django.utils import timezone
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
 from django.utils.text import Truncator
 import django
@@ -134,7 +134,7 @@ class FormSubmissionAdmin(admin.ModelAdmin):
 
         if obj:
             context.update({
-                'title': force_text(obj.plugin),
+                'title': force_str(obj.plugin),
             })
 
         return super(FormSubmissionAdmin, self).change_view(
@@ -219,7 +219,7 @@ class FormSubmissionAdmin(admin.ModelAdmin):
                     if label in headers:
                         row[headers.index(label)] = humanize(field)
 
-                    row[-4] = force_text(submission.created_by or _('Unknown'))
+                    row[-4] = force_str(submission.created_by or _('Unknown'))
                     row[-3] = submission.creation_date.strftime(
                         settings.DJANGOCMS_FORMS_DATETIME_FORMAT)
                     row[-2] = submission.ip
@@ -254,7 +254,7 @@ class FormSubmissionAdmin(admin.ModelAdmin):
         media = self.media + adminform.media
 
         context = {
-            'title': _('Export %s') % force_text(self.opts.verbose_name_plural),
+            'title': _('Export %s') % force_str(self.opts.verbose_name_plural),
             'adminform': adminform,
             'is_popup': (IS_POPUP_VAR in request.POST or IS_POPUP_VAR in request.GET),
             'media': mark_safe(media),
